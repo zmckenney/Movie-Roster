@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        app:showAsAction="never"  />
+
+    <item android:id="@+id/action_rating"
+        android:title="@string/action_rating"
+        android:icon="@drawable/ic_star_border_white_24dp"
+        app:showAsAction="always"
+        />
+
+    <item android:id="@+id/action_popular"
+        android:title="@string/action_popular"
+        android:icon="@drawable/ic_sort_white_24dp"
+        app:showAsAction="always"
+        />
+
+</menu>
