@@ -34,7 +34,7 @@ public class MovieFragment extends Fragment {
     private final String LOG_TAG = MovieFragment.class.getSimpleName();
     private PosterAdapter mPosterAdapter;
 
-    private ArrayList<MovieData> movieDataResults = new ArrayList<MovieData>();
+    private ArrayList<MovieData> movieDataResults = new ArrayList<>();
 
     private ArrayList<MovieData> movieFinalResults;
 
@@ -64,7 +64,7 @@ public class MovieFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-            movieFinalResults = new ArrayList<MovieData>(movieDataResults);
+            movieFinalResults = new ArrayList<>(movieDataResults);
 
         }
         else {
@@ -260,8 +260,7 @@ public class MovieFragment extends Fragment {
                 final String DATABASE_BASE_URL = "http://api.themoviedb.org/3";
 
                 //TODO: add API key below to use program properly
-                final String API_KEY = "&api_key=";
-
+                final String API_KEY = "&api_key=YOUR_API_KEY_HERE";
 
                 URL url = new URL(DATABASE_BASE_URL + URLAppend + API_KEY);
 

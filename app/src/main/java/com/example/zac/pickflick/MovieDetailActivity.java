@@ -3,6 +3,7 @@ package com.example.zac.pickflick;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -22,17 +23,15 @@ public class MovieDetailActivity extends AppCompatActivity {
     String release;
     String rating;
     String backdrop;
-    String categoryPopOrRate;
-    int popOrRateInteger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
+        //Pull all the data from the Intent created by MainFragment
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            //String forecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
             mMovieInfo = intent.getStringArrayExtra(Intent.EXTRA_TEXT);
             title = mMovieInfo[0];
             poster = mMovieInfo[1];
@@ -41,12 +40,15 @@ public class MovieDetailActivity extends AppCompatActivity {
             rating = mMovieInfo[4];
             backdrop = mMovieInfo[5];
 
+            //Set the title on the actionbar
             this.setTitle(title);
 
+            //create a 5 star system from the 10 star rating given at TMDb
             float ratingNum = Float.parseFloat(rating);
             ratingNum /= 2;
+            Log.v(LOG_TAG, "ratingNum = " + ratingNum);
 
-            ((TextView) findViewById(R.id.movie_title_textview)).setText(title);
+                    ((TextView) findViewById(R.id.movie_title_textview)).setText(title);
             ((TextView) findViewById(R.id.movie_synopsis_textview)).setText(synopsis);
             ((TextView) findViewById(R.id.movie_release_textview)).setText(release);
             ((RatingBar) findViewById(R.id.movie_ratingbar)).setRating(ratingNum);
@@ -78,9 +80,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-        //    return true;
-        //}
+        /**
+        if (id == R.id.action_settings) {
+            return true;
+        }
+         */
 
         return super.onOptionsItemSelected(item);
     }
