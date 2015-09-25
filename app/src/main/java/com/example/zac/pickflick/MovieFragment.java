@@ -34,10 +34,20 @@ public class MovieFragment extends Fragment {
     private final String LOG_TAG = MovieFragment.class.getSimpleName();
     private PosterAdapter mPosterAdapter;
 
-    ArrayList<MovieData> movieDataResults = new ArrayList<MovieData>();
+    private ArrayList<MovieData> movieDataResults = new ArrayList<MovieData>();
 
-    String URLAppend = "/discover/movie?sort_by=popularity.desc";
+    private ArrayList<MovieData> movieFinalResults;
 
+    String URLAppend;
+
+    //The minimum amount of votes needed for a movie to be eligible for the Top Rated list.  Maybe put this in a settings menu later?
+    String voteMinimum = "50";
+
+    //Most Popular listed = 0, Highest Rated = 1
+    public static int popOrRateInteger = 0;
+
+
+    //Values changed upon action bar clicks, used to prevent API data pulls from occurring every time the button is used
     int popularClicked = 0;
     int ratingClicked = 0;
 
@@ -48,12 +58,38 @@ public class MovieFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateMovies();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+            movieFinalResults = new ArrayList<MovieData>(movieDataResults);
+
+        }
+        else {
+            movieFinalResults = savedInstanceState.getParcelableArrayList("movies");
+        }
+
+        if (movieFinalResults.size() == 0) {
+            switch (popOrRateInteger) {
+
+                case 0:
+                    URLAppend = "/discover/movie?sort_by=popularity.desc";
+                    updateMovies();
+                    Log.v(LOG_TAG, "movieFinalResults is 0");
+                    //updateMovies();
+                    break;
+
+                case 1:
+                    URLAppend = "/discover/movie?vote_count.gte=" + voteMinimum + "&sort_by=vote_average.desc";
+                    updateMovies();
+                    Log.v(LOG_TAG, "movieFinalResults is 0");
+                    break;
+
+            }
+
+        }
         setHasOptionsMenu(true);
     }
 
@@ -68,61 +104,62 @@ public class MovieFragment extends Fragment {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        Log.v(LOG_TAG, "" + item);
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_refresh :
-                updateMovies();
-                break;
+        //    case R.id.action_refresh :
+        //        updateMovies();
+        //        break;
 
             case R.id.action_popular :
                     if (popularClicked == 0){
                         popularClicked = 1;
                     ratingClicked = 0;
+                        popOrRateInteger = 0;
                     URLAppend = "/discover/movie?sort_by=popularity.desc";
                     Log.v(LOG_TAG, "Most Popular tapped, URL = " + URLAppend);
-                    updateMovies();}
+                    updateMovies();
+                    Log.v(LOG_TAG, "ID for this action " + item);
+                    }
                 break;
 
             case R.id.action_rating :
                     if (ratingClicked == 0){
                         ratingClicked = 1;
                 popularClicked = 0;
-                    URLAppend = "/discover/movie?sort_by=vote_average.desc";
+                        popOrRateInteger = 1;
+                    URLAppend = "/discover/movie?vote_count.gte=" + voteMinimum + "&sort_by=vote_average.desc";
                     Log.v(LOG_TAG, "Rating tapped, URL = " + URLAppend);
-                    updateMovies();}
+                    updateMovies();
+                    Log.v(LOG_TAG, "ID for this action " + item);
+                    }
+
                 break;
 
         }
-
-       // }
-
-
-        //if (id == R.id.action_refresh){
-            //updateMovies();
-
-          //  return true;
-        //}
 
         return super.onOptionsItemSelected(item);
     }
 
     private void updateMovies() {
         FetchMoviesTask moviesTask = new FetchMoviesTask();
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //String loc = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
         moviesTask.execute();
         Log.v(LOG_TAG, "updateMovies() was called");
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("movies", movieFinalResults);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         //return inflater.inflate(R.layout.fragment_main, container, false);
-
-        mPosterAdapter = new PosterAdapter(getActivity(), movieDataResults);
-
+        mPosterAdapter = new PosterAdapter(getActivity(), movieFinalResults);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -132,8 +169,15 @@ public class MovieFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //String moviePosition = mPosterAdapter.getItem(i);
-                Intent detailIntent = new Intent(getActivity(), MovieDetailActivity.class);
+                MovieData moviePosition = mPosterAdapter.getItem(i);
+                String title = moviePosition.movieTitle;
+                String poster = moviePosition.moviePosterPath;
+                String synopsis = moviePosition.movieSynopsis;
+                String release = moviePosition.movieReleaseDate;
+                String rating = moviePosition.movieUserRating;
+                String backdrop = moviePosition.movieBackDrop;
+
+                Intent detailIntent = new Intent(getActivity(), MovieDetailActivity.class).putExtra(Intent.EXTRA_TEXT, new String[]{title, poster, synopsis, release, rating, backdrop});
                 startActivity(detailIntent);
             }
         });
@@ -143,11 +187,6 @@ public class MovieFragment extends Fragment {
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, MovieData[]> {
-
-
-        public void setAppendURL(String appendURL) {
-            this.appendURL = appendURL;
-        }
 
         public String appendURL;
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
@@ -161,39 +200,39 @@ public class MovieFragment extends Fragment {
             final String JSON_OVERVIEW = "overview";
             final String JSON_RELEASE = "release_date";
             final String JSON_RATING = "vote_average";
+            final String JSON_BACKDROP = "backdrop_path";
 
             JSONObject movieJSON = new JSONObject(movieJsonStr);
             JSONArray moviesArray = movieJSON.getJSONArray(JSON_RESULTS);
 
 
-            //String[] resultStr = new String[moviesArray.length()];
             MovieData[] resultMovieInfo = new MovieData[moviesArray.length()];
 
             for (int i=0; i < moviesArray.length(); i++) {
 
                 String title;
                 String poster;
-                String overview;
                 String synopsis;
                 String release;
                 String rating;
+                String backdrop;
 
                 //Get the JSON object for the movie
                 JSONObject movieInformation = moviesArray.getJSONObject(i);
 
+                //get all information to pass into the MovieData Object
                 title = movieInformation.getString(JSON_TITLE);
                 poster = movieInformation.getString(JSON_POSTER);
                 synopsis = movieInformation.getString(JSON_OVERVIEW);
                 release = movieInformation.getString(JSON_RELEASE);
                 rating = movieInformation.getString(JSON_RATING);
+                backdrop = movieInformation.getString(JSON_BACKDROP);
 
 
-
-                resultMovieInfo[i] = new MovieData(title, poster, synopsis, release, rating);
-                //resultStr[i] = poster;
+                //Add new MovieData Object into resultMovieInfo list
+                resultMovieInfo[i] = new MovieData(title, poster, synopsis, release, rating, backdrop);
             }
 
-            //return resultStr;
             return resultMovieInfo;
 
         }
@@ -201,7 +240,7 @@ public class MovieFragment extends Fragment {
         @Override
         protected MovieData[] doInBackground(String... params) {
 
-            //TODO: Commented out the null params if statement because wouldnt run if used
+            //TODO: Dont quite understand why I would need the below code, my params ARE null but that doesnt affect my results
             //If there arent any params then theres nothing to do so null
             //if (params.length == 0) {
             //    Log.v(LOG_TAG, "The Params for our doInBackground method are null, no Params!");

@@ -42,62 +42,9 @@ public class PosterAdapter extends ArrayAdapter<MovieData> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_movies, parent, false);
         }
 
-        //TextView textView = (TextView) convertView.findViewById(R.id.list_item_poster);
-        //textView.setText(movieData.moviePosterPath);
-
         ImageView imageView = (ImageView) convertView.findViewById(R.id.list_item_poster);
-        Picasso.with(getContext()).load(movieData.moviePosterPath).placeholder(R.drawable.terminator).error(R.drawable.theinternship).fit().into(imageView);
+        Picasso.with(getContext()).load(movieData.moviePosterPath).placeholder(R.drawable.posterplaceholder).error(R.drawable.postererror).fit().into(imageView);
 
         return convertView;
     }
-
-
-    // -=-==--==--=-==-=--==--=ALL CODE BELOW IS OLD, SAVED IN CASE I NEED TO REVERT BACK -=-=-==-==-=-=-
-    /**
-
-    public Context mContext;
-
-    public PosterAdapter(Context c) {
-        mContext = c;
-    }
-
-    @Override
-    public int getCount() {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        if (convertView == null) {
-            // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
-        } else {
-            imageView = (ImageView) convertView;
-        }
-
-        //imageView.setImageResource(mThumbIds[position]);
-        return imageView;
-    }
-
-    =--==-=-=-=--=-=-=-=-=-==-=-==-=--==-ALL ABOVE WAS PREVIOUS CODE - IF THIS DOESNT WORK REVERT BACK TO IT I GUESS? ==--==-=-=-=-=-=-=--=
-    */
-
-    //TODO: set DetailAdapter in DetailFragment
-
-
-
 }
