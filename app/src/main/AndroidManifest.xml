@@ -4,11 +4,19 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name="com.orm.SugarApp">
+
+        <meta-data android:name="DATABASE" android:value="favorites_database.db" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example" />
+
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >

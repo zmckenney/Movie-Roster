@@ -4,5 +4,7 @@
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="action_rating">Rating</string>
     <string name="action_popular">Most Popular</string>
+    <string name="action_favorites">Favorites</string>
+
     <string name="title_activity_movie_detail">Movie Details</string>
 </resources>

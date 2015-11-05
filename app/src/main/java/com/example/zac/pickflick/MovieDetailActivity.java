@@ -6,15 +6,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity  {
 
     public final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
+
+    private Button buttonFavorite;
+
 
     private String[] mMovieInfo;
     String title;
@@ -48,7 +53,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             ratingNum /= 2;
             Log.v(LOG_TAG, "ratingNum = " + ratingNum);
 
-                    ((TextView) findViewById(R.id.movie_title_textview)).setText(title);
+            ((TextView) findViewById(R.id.movie_title_textview)).setText(title);
             ((TextView) findViewById(R.id.movie_synopsis_textview)).setText(synopsis);
             ((TextView) findViewById(R.id.movie_release_textview)).setText(release);
             ((RatingBar) findViewById(R.id.movie_ratingbar)).setRating(ratingNum);
@@ -59,6 +64,34 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             Picasso.with(getApplicationContext()).load(backdrop).placeholder(R.drawable.transitionbackdrop).error(R.drawable.transitionbackdroperror).fit().into(backDropImageView);
             Picasso.with(getApplicationContext()).load(poster).placeholder(R.drawable.posterplaceholder).error(R.drawable.postererror).fit().into(posterImageView);
+
+
+            buttonFavorite = (Button) findViewById(R.id.action_favorites);
+            buttonFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.v(LOG_TAG, "Favorite Button pressed on Detail View");
+                    if (Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
+                        Favorite favorite = new Favorite(title, synopsis, release, rating, poster, backdrop);
+                        favorite.save();
+                    }
+                    else if (!Favorite.find(Favorite.class, "title = ?", title).isEmpty()){
+
+                        Favorite.deleteAll(Favorite.class,"title = ?", title);
+
+
+                        //Favorite.executeQuery("DELETE * FROM Favorite WHERE title = ?", title);
+
+                        //Favorite.executeQuery("DELETE * FROM Favorite where title = ?", title);
+                        //Favorite favorite = Favorite.findById(Favorite.class, favId);
+                        //Favorite delete = Select.from(Favorite.class)
+                               // .where(Condition.prop("title").eq(title));
+                    }
+
+                }
+            });
+
+
         }
 
 

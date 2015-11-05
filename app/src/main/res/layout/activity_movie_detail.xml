@@ -19,7 +19,9 @@
         android:layout_height="225dp"
         android:id="@+id/movie_backdrop_imageview"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        />
 
     <ImageView
         android:layout_width="100dp"
@@ -75,7 +77,9 @@
         android:id="@+id/movie_synopsis_textview"
         android:text="TESTING Drawn from interviews with survivors of Easy Company, as well as their journals and letters, Band of Brothers chronicles the experiences of these men from paratrooper training in Georgia through the end of the war. As an elite rifle company parachuting into Normandy early on D-Day morning, participants in the Battle of the Bulge, and witness to the horrors of war, the men of Easy knew extraordinary bravery and extraordinary fear - and became the stuff of legend. Based on Stephen E. Ambrose's acclaimed book of the same name."
         android:paddingBottom="10dp"
-        android:layout_below="@+id/movie_title_textview"
+        android:layout_below="@+id/button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/movie_poster_imageview"
         android:layout_toEndOf="@+id/movie_poster_imageview" />
 
@@ -100,6 +104,15 @@
         android:layout_toLeftOf="@+id/movie_synopsis_textview"
         android:layout_toStartOf="@+id/movie_synopsis_textview"
         android:gravity="left" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorite"
+        android:id="@+id/action_favorites"
+        android:layout_below="@+id/title_background"
+        android:layout_toRightOf="@+id/movie_poster_imageview"
+        android:layout_toEndOf="@+id/movie_poster_imageview" />
 
 
 </RelativeLayout>

@@ -43,13 +43,14 @@ public class MovieFragment extends Fragment {
     //The minimum amount of votes needed for a movie to be eligible for the Top Rated list.  Maybe put this in a settings menu later?
     String voteMinimum = "50";
 
-    //Most Popular listed = 0, Highest Rated = 1
-    public static int popOrRateInteger = 0;
+    //Most Popular listed = 0, Highest Rated = 1, Favorite = 2
+    public static int popRateOrFavorites = 0;
 
 
     //Values changed upon action bar clicks, used to prevent API data pulls from occurring every time the button is used
     int popularClicked = 0;
     int ratingClicked = 0;
+    int favoritesClicked = 0;
 
 
     public MovieFragment() {
@@ -72,7 +73,7 @@ public class MovieFragment extends Fragment {
         }
 
         if (movieFinalResults.size() == 0) {
-            switch (popOrRateInteger) {
+            switch (popRateOrFavorites) {
 
                 case 0:
                     URLAppend = "/discover/movie?sort_by=popularity.desc";
@@ -86,6 +87,9 @@ public class MovieFragment extends Fragment {
                     updateMovies();
                     Log.v(LOG_TAG, "movieFinalResults is 0");
                     break;
+
+                case 2:
+
 
             }
 
@@ -114,28 +118,45 @@ public class MovieFragment extends Fragment {
 
             case R.id.action_popular :
                     if (popularClicked == 0){
+
                         popularClicked = 1;
-                    ratingClicked = 0;
-                        popOrRateInteger = 0;
+                        ratingClicked = 0;
+                        favoritesClicked = 0;
+
+                        popRateOrFavorites = 0;
                     URLAppend = "/discover/movie?sort_by=popularity.desc";
                     Log.v(LOG_TAG, "Most Popular tapped, URL = " + URLAppend);
                     updateMovies();
-                    Log.v(LOG_TAG, "ID for this action " + item);
+                    //Log.v(LOG_TAG, "ID for this action " + item);
                     }
                 break;
 
             case R.id.action_rating :
                     if (ratingClicked == 0){
+
                         ratingClicked = 1;
-                popularClicked = 0;
-                        popOrRateInteger = 1;
+                        popularClicked = 0;
+                        favoritesClicked = 0;
+
+                        popRateOrFavorites = 1;
                     URLAppend = "/discover/movie?vote_count.gte=" + voteMinimum + "&sort_by=vote_average.desc";
                     Log.v(LOG_TAG, "Rating tapped, URL = " + URLAppend);
                     updateMovies();
-                    Log.v(LOG_TAG, "ID for this action " + item);
                     }
 
                 break;
+
+            case R.id.action_favorites :
+                if (favoritesClicked == 0){
+
+                    favoritesClicked = 1;
+                    popularClicked = 0;
+                    favoritesClicked = 0;
+
+                    popRateOrFavorites = 2;
+                    Log.v(LOG_TAG, "Favorite tapped, use database");
+                }
+
 
         }
 
@@ -190,7 +211,6 @@ public class MovieFragment extends Fragment {
 
         public String appendURL;
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
-
 
         private MovieData[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
 
@@ -260,7 +280,7 @@ public class MovieFragment extends Fragment {
                 final String DATABASE_BASE_URL = "http://api.themoviedb.org/3";
 
                 //TODO: add API key below to use program properly
-                final String API_KEY = "&api_key=YOUR_API_KEY_HERE";
+                final String API_KEY = "&api_key=f6bad9e637ad41c90e2d1d6e05aa3042";
 
                 URL url = new URL(DATABASE_BASE_URL + URLAppend + API_KEY);
 

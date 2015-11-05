@@ -19,4 +19,10 @@
         app:showAsAction="always"
         />
 
+    <item android:id="@+id/action_favorites"
+        android:title="@string/action_favorites"
+        android:icon="@drawable/ic_sort_white_24dp"
+        app:showAsAction="always"
+        />
+
 </menu>
