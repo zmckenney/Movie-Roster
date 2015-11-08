@@ -28,6 +28,7 @@ public class MovieDetailActivity extends AppCompatActivity  {
     String release;
     String rating;
     String backdrop;
+    String movieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,58 +45,50 @@ public class MovieDetailActivity extends AppCompatActivity  {
             release = mMovieInfo[3];
             rating = mMovieInfo[4];
             backdrop = mMovieInfo[5];
-
-            //Set the title on the actionbar
-            this.setTitle(title);
-
-            //create a 5 star system from the 10 star rating given at TMDb
-            float ratingNum = Float.parseFloat(rating);
-            ratingNum /= 2;
-            Log.v(LOG_TAG, "ratingNum = " + ratingNum);
-
-            ((TextView) findViewById(R.id.movie_title_textview)).setText(title);
-            ((TextView) findViewById(R.id.movie_synopsis_textview)).setText(synopsis);
-            ((TextView) findViewById(R.id.movie_release_textview)).setText(release);
-            ((RatingBar) findViewById(R.id.movie_ratingbar)).setRating(ratingNum);
+            movieId = mMovieInfo[6];
 
 
-            ImageView backDropImageView = (ImageView) findViewById(R.id.movie_backdrop_imageview);
-            ImageView posterImageView = (ImageView) findViewById(R.id.movie_poster_imageview);
+        //Set the title on the actionbar
+        this.setTitle(title);
 
-            Picasso.with(getApplicationContext()).load(backdrop).placeholder(R.drawable.transitionbackdrop).error(R.drawable.transitionbackdroperror).fit().into(backDropImageView);
-            Picasso.with(getApplicationContext()).load(poster).placeholder(R.drawable.posterplaceholder).error(R.drawable.postererror).fit().into(posterImageView);
+        //create a 5 star system from the 10 star rating given at TMDb
+        float ratingNum = Float.parseFloat(rating);
+        ratingNum /= 2;
+        Log.v(LOG_TAG, "ratingNum = " + ratingNum);
 
-
-            buttonFavorite = (Button) findViewById(R.id.action_favorites);
-            buttonFavorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.v(LOG_TAG, "Favorite Button pressed on Detail View");
-                    if (Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
-                        Favorite favorite = new Favorite(title, synopsis, release, rating, poster, backdrop);
-                        favorite.save();
-                    }
-                    else if (!Favorite.find(Favorite.class, "title = ?", title).isEmpty()){
-
-                        Favorite.deleteAll(Favorite.class,"title = ?", title);
+        ((TextView) findViewById(R.id.movie_title_textview)).setText(title);
+        ((TextView) findViewById(R.id.movie_synopsis_textview)).setText(synopsis);
+        ((TextView) findViewById(R.id.movie_release_textview)).setText(release);
+        ((RatingBar) findViewById(R.id.movie_ratingbar)).setRating(ratingNum);
 
 
-                        //Favorite.executeQuery("DELETE * FROM Favorite WHERE title = ?", title);
+        ImageView backDropImageView = (ImageView) findViewById(R.id.movie_backdrop_imageview);
+        ImageView posterImageView = (ImageView) findViewById(R.id.movie_poster_imageview);
 
-                        //Favorite.executeQuery("DELETE * FROM Favorite where title = ?", title);
-                        //Favorite favorite = Favorite.findById(Favorite.class, favId);
-                        //Favorite delete = Select.from(Favorite.class)
-                               // .where(Condition.prop("title").eq(title));
-                    }
+        Picasso.with(getApplicationContext()).load(backdrop).placeholder(R.drawable.transitionbackdrop).error(R.drawable.transitionbackdroperror).fit().into(backDropImageView);
+        Picasso.with(getApplicationContext()).load(poster).placeholder(R.drawable.posterplaceholder).error(R.drawable.postererror).fit().into(posterImageView);
+
+
+        buttonFavorite = (Button) findViewById(R.id.action_favorites);
+        buttonFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(LOG_TAG, "Favorite Button pressed on Detail View");
+                if (Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
+                    Favorite favorite = new Favorite(title, synopsis, release, rating, poster, backdrop, movieId);
+                    favorite.save();
+                }
+                else if (!Favorite.find(Favorite.class, "title = ?", title).isEmpty()){
+
+                    Favorite.deleteAll(Favorite.class,"title = ?", title);
 
                 }
-            });
 
-
-        }
-
-
+            }
+        });
     }
+
+}
 
 
     @Override
@@ -114,9 +107,9 @@ public class MovieDetailActivity extends AppCompatActivity  {
 
         //noinspection SimplifiableIfStatement
         /**
-        if (id == R.id.action_settings) {
-            return true;
-        }
+         if (id == R.id.action_settings) {
+         return true;
+         }
          */
 
         return super.onOptionsItemSelected(item);

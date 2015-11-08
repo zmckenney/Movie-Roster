@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -89,12 +91,19 @@ public class MovieFragment extends Fragment {
                     break;
 
                 case 2:
+                    updateMovies();
+                    Log.v(LOG_TAG, "movieFinalResults is 0");
+                    break;
 
 
             }
 
         }
         setHasOptionsMenu(true);
+
+
+
+
     }
 
     @Override
@@ -155,6 +164,7 @@ public class MovieFragment extends Fragment {
 
                     popRateOrFavorites = 2;
                     Log.v(LOG_TAG, "Favorite tapped, use database");
+                    updateMovies();
                 }
 
 
@@ -167,6 +177,7 @@ public class MovieFragment extends Fragment {
         FetchMoviesTask moviesTask = new FetchMoviesTask();
         moviesTask.execute();
         Log.v(LOG_TAG, "updateMovies() was called");
+
     }
 
     @Override
@@ -174,6 +185,7 @@ public class MovieFragment extends Fragment {
         outState.putParcelableArrayList("movies", movieFinalResults);
         super.onSaveInstanceState(outState);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -197,8 +209,9 @@ public class MovieFragment extends Fragment {
                 String release = moviePosition.movieReleaseDate;
                 String rating = moviePosition.movieUserRating;
                 String backdrop = moviePosition.movieBackDrop;
+                String movieId = moviePosition.movieId;
 
-                Intent detailIntent = new Intent(getActivity(), MovieDetailActivity.class).putExtra(Intent.EXTRA_TEXT, new String[]{title, poster, synopsis, release, rating, backdrop});
+                Intent detailIntent = new Intent(getActivity(), MovieDetailActivity.class).putExtra(Intent.EXTRA_TEXT, new String[]{title, poster, synopsis, release, rating, backdrop, movieId});
                 startActivity(detailIntent);
             }
         });
@@ -206,6 +219,10 @@ public class MovieFragment extends Fragment {
         return rootView;
 
     }
+
+
+
+
 
     public class FetchMoviesTask extends AsyncTask<String, Void, MovieData[]> {
 
@@ -221,6 +238,7 @@ public class MovieFragment extends Fragment {
             final String JSON_RELEASE = "release_date";
             final String JSON_RATING = "vote_average";
             final String JSON_BACKDROP = "backdrop_path";
+            final String JSON_ID = "id";
 
             JSONObject movieJSON = new JSONObject(movieJsonStr);
             JSONArray moviesArray = movieJSON.getJSONArray(JSON_RESULTS);
@@ -236,6 +254,7 @@ public class MovieFragment extends Fragment {
                 String release;
                 String rating;
                 String backdrop;
+                String id;
 
                 //Get the JSON object for the movie
                 JSONObject movieInformation = moviesArray.getJSONObject(i);
@@ -247,15 +266,18 @@ public class MovieFragment extends Fragment {
                 release = movieInformation.getString(JSON_RELEASE);
                 rating = movieInformation.getString(JSON_RATING);
                 backdrop = movieInformation.getString(JSON_BACKDROP);
+                id = movieInformation.getString(JSON_ID);
+
 
 
                 //Add new MovieData Object into resultMovieInfo list
-                resultMovieInfo[i] = new MovieData(title, poster, synopsis, release, rating, backdrop);
+                resultMovieInfo[i] = new MovieData(title, poster, synopsis, release, rating, backdrop, id, "0");
             }
 
             return resultMovieInfo;
 
         }
+
 
         @Override
         protected MovieData[] doInBackground(String... params) {
@@ -267,86 +289,130 @@ public class MovieFragment extends Fragment {
             //    return null;
             //}
 
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
 
-            String movieJsonStr = null;
+            if (popRateOrFavorites == 2) {
+                try {
+                    List<Favorite> favorites = Favorite.findWithQuery(Favorite.class, "Select * from Favorite where ID >> ? ", "-2");
+                    int count = favorites.size();
+                    MovieData[] resultMovieInfo = new MovieData[count];
+                    Log.v(LOG_TAG, "Total Results = " + count);
 
 
-            try {
+                    if (count > 0) {
 
-                final String DATABASE_BASE_URL = "http://api.themoviedb.org/3";
+                        for (int i = 0; i <= count - 1; i++) {
+                            String favoritesString = favorites.get(i).toString();
+                            List<String> items = Arrays.asList(favoritesString.split("'\'"));
 
-                //TODO: add API key below to use program properly
-                final String API_KEY = "&api_key=f6bad9e637ad41c90e2d1d6e05aa3042";
+                            String title = items.get(0);
+                            String posterPath = items.get(1);
+                            String synopsis = items.get(2);
+                            String releaseDate = items.get(3);
+                            String rating = items.get(4);
+                            String backdrop = items.get(5);
+                            String id = items.get(6);
 
-                URL url = new URL(DATABASE_BASE_URL + URLAppend + API_KEY);
+                            resultMovieInfo[i] = new MovieData(title, posterPath, synopsis, releaseDate, rating, backdrop, id, "1");
 
-                Log.v(LOG_TAG, "URL = " + url);
+                            Log.v(LOG_TAG, " " + title + " " + posterPath + " " + synopsis + " " + releaseDate + " " + rating + " " + backdrop + " " + id);
+                        }
 
-                // Create the request to OpenWeatherMap, and open the connection
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
+                        return resultMovieInfo;
+                    }
 
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    // Nothing to do.
-                    Log.v(LOG_TAG,"our input stream has no data - null inputStream");
+                    }
+                 catch (RuntimeException e) {
+                    Log.e("FavoritesFragment", "Error ", e);
+                    // If the code didn't successfully get the weather data, there's no point in attemping
+                    // to parse it.
                     return null;
                 }
+            }
+            else {
 
-                reader = new BufferedReader(new InputStreamReader(inputStream));
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
-                }
+                // These two need to be declared outside the try/catch
+                // so that they can be closed in the finally block.
+                HttpURLConnection urlConnection = null;
+                BufferedReader reader = null;
 
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
+                String movieJsonStr = null;
+
+
+                try {
+
+                    final String DATABASE_BASE_URL = "http://api.themoviedb.org/3";
+
+                    //TODO: add API key below to use program properly
+                    final String API_KEY = "YOUR_KEY_HERE";
+
+                    URL url = new URL(DATABASE_BASE_URL + URLAppend + API_KEY);
+
+                    Log.v(LOG_TAG, "URL = " + url);
+
+                    // Create the request to OpenWeatherMap, and open the connection
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+
+                    // Read the input stream into a String
+                    InputStream inputStream = urlConnection.getInputStream();
+                    StringBuffer buffer = new StringBuffer();
+                    if (inputStream == null) {
+                        // Nothing to do.
+                        Log.v(LOG_TAG, "our input stream has no data - null inputStream");
+                        return null;
+                    }
+
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                        // But it does make debugging a *lot* easier if you print out the completed
+                        // buffer for debugging.
+                        buffer.append(line + "\n");
+                    }
+
+                    if (buffer.length() == 0) {
+                        // Stream was empty.  No point in parsing.
+                        return null;
+                    }
+
+                    movieJsonStr = buffer.toString();
+                    Log.v(LOG_TAG, "JSON string : " + movieJsonStr);
+
+
+                } catch (IOException e) {
+                    Log.e("PlaceholderFragment", "Error ", e);
+                    // If the code didn't successfully get the weather data, there's no point in attemping
+                    // to parse it.
                     return null;
-                }
-
-                movieJsonStr = buffer.toString();
-                Log.v(LOG_TAG, "JSON string : " + movieJsonStr);
-
-
-            } catch (IOException e) {
-                Log.e("PlaceholderFragment", "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
-                return null;
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                    if (reader != null) {
+                        try {
+                            reader.close();
+                        } catch (final IOException e) {
+                            Log.e("PlaceholderFragment", "Error closing stream", e);
+                        }
                     }
                 }
+
+                try {
+                    Log.v(LOG_TAG, "try method with getMovieDataFromJson ran");
+                    return getMovieDataFromJson(movieJsonStr);
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, e.getMessage(), e);
+                    e.printStackTrace();
+                }
+
+            }
+                return null;
             }
 
-            try {
-                Log.v(LOG_TAG, "try method with getMovieDataFromJson ran");
-                return getMovieDataFromJson(movieJsonStr);
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, e.getMessage(), e);
-                e.printStackTrace();
-            }
-
-            return null;
-        }
 
 
         @Override

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by Zac on 9/8/15.
  */
+
 public class PosterAdapter extends ArrayAdapter<MovieData> {
 
     private static final String LOG_TAG = PosterAdapter.class.getSimpleName();
@@ -32,6 +33,7 @@ public class PosterAdapter extends ArrayAdapter<MovieData> {
 
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -47,4 +49,9 @@ public class PosterAdapter extends ArrayAdapter<MovieData> {
 
         return convertView;
     }
+
+
+
+
+
 }

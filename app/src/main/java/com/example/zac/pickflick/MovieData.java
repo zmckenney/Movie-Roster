@@ -8,6 +8,9 @@ import android.os.Parcelable;
  */
 public class MovieData implements Parcelable {
 
+    private static final String LOG_TAG = MovieData.class.getSimpleName();
+
+
     String movieTitle;
     String movieSynopsis;
     String movieReleaseDate;
@@ -16,18 +19,31 @@ public class MovieData implements Parcelable {
     String backdropBaseURL = "http://image.tmdb.org/t/p/w600";
     String moviePosterPath;
     String movieBackDrop;
+    String movieId;
+    String standOrFav;
+    int standOrFavInt;
+    //mStandOrFav - Stand = 0, Fav = 1
 
-
-
-
-    public MovieData(String mTitle, String mPath, String mSynopsis, String mRelease, String mRating, String mBackDrop ) {
+    public MovieData(String mTitle, String mPath, String mSynopsis, String mRelease, String mRating, String mBackDrop, String mId, String mStandOrFav) {
 
         this.movieTitle = mTitle;
         this.movieSynopsis = mSynopsis;
         this.movieReleaseDate = mRelease;
         this.movieUserRating = mRating;
-        this.movieBackDrop = backdropBaseURL + mBackDrop;
-        this.moviePosterPath = posterBaseURL + mPath;
+        this.movieBackDrop = mBackDrop;
+        this.moviePosterPath = mPath;
+        this.movieId = mId;
+        this.standOrFav = mStandOrFav;
+        PosterPaths();
+
+    }
+
+    private void PosterPaths(){
+        standOrFavInt = Integer.parseInt(standOrFav);
+        if (standOrFavInt == 0) {
+            this.movieBackDrop = backdropBaseURL + movieBackDrop;
+            this.moviePosterPath = posterBaseURL + moviePosterPath;
+        }
     }
 
 
@@ -38,6 +54,7 @@ public class MovieData implements Parcelable {
         movieUserRating = in.readString();
         movieBackDrop = in.readString();
         moviePosterPath = in.readString();
+        movieId = in.readString();
     }
 
     @Override
@@ -53,6 +70,7 @@ public class MovieData implements Parcelable {
         parcel.writeString(movieUserRating);
         parcel.writeString(movieBackDrop);
         parcel.writeString(moviePosterPath);
+        parcel.writeString(movieId);
     }
 
 

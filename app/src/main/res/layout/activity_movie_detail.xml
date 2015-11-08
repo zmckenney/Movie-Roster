@@ -77,11 +77,12 @@
         android:id="@+id/movie_synopsis_textview"
         android:text="TESTING Drawn from interviews with survivors of Easy Company, as well as their journals and letters, Band of Brothers chronicles the experiences of these men from paratrooper training in Georgia through the end of the war. As an elite rifle company parachuting into Normandy early on D-Day morning, participants in the Battle of the Bulge, and witness to the horrors of war, the men of Easy knew extraordinary bravery and extraordinary fear - and became the stuff of legend. Based on Stephen E. Ambrose's acclaimed book of the same name."
         android:paddingBottom="10dp"
-        android:layout_below="@+id/button"
+        android:layout_alignBottom="@+id/action_favorites"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/movie_poster_imageview"
-        android:layout_toEndOf="@+id/movie_poster_imageview" />
+        android:layout_toEndOf="@+id/movie_poster_imageview"
+        android:layout_below="@+id/title_background" />
 
     <TextView
         style="@style/DetailText"
@@ -110,10 +111,27 @@
         android:layout_height="wrap_content"
         android:text="Favorite"
         android:id="@+id/action_favorites"
-        android:layout_below="@+id/title_background"
-        android:layout_toRightOf="@+id/movie_poster_imageview"
-        android:layout_toEndOf="@+id/movie_poster_imageview" />
+        android:layout_below="@+id/movie_release_textview"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trailers - aslkdfjlakjefjklawelkfnawlkjdnsfkjlasndflknasldkfjlakwenflaenwflijawelifnalwenfoiq34h589u34ojkt4gihujbrghwehvojdsfhkvjdflsad"
+        android:id="@+id/movie_youtube_textview"
+        android:layout_below="@+id/movie_synopsis_textview"/>
+
+
+
+    <TextView
+        style="@style/DetailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reviews"
+        android:id="@+id/movie_comments_textview"
+        android:layout_below="@+id/movie_youtube_textview"
+        />
 
 </RelativeLayout>
 </ScrollView>
