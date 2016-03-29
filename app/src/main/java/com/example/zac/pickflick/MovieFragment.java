@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +34,8 @@ import java.util.List;
  */
 public class MovieFragment extends Fragment {
 
+    public static final String DETAILFRAGMENT_TAG = "DFTAG";
+
     private final String LOG_TAG = MovieFragment.class.getSimpleName();
     private PosterAdapter mPosterAdapter;
 
@@ -41,6 +44,7 @@ public class MovieFragment extends Fragment {
     private ArrayList<MovieData> movieFinalResults;
 
     String URLAppend;
+    String[] moviePassDatas;
 
     //The minimum amount of votes needed for a movie to be eligible for the Top Rated list.  Maybe put this in a settings menu later?
     String voteMinimum = "50";
@@ -58,10 +62,6 @@ public class MovieFragment extends Fragment {
     public MovieFragment() {
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,16 +94,10 @@ public class MovieFragment extends Fragment {
                     updateMovies();
                     Log.v(LOG_TAG, "movieFinalResults is 0");
                     break;
-
-
             }
 
         }
         setHasOptionsMenu(true);
-
-
-
-
     }
 
     @Override
@@ -166,8 +160,6 @@ public class MovieFragment extends Fragment {
                     Log.v(LOG_TAG, "Favorite tapped, use database");
                     updateMovies();
                 }
-
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -211,22 +203,44 @@ public class MovieFragment extends Fragment {
                 String backdrop = moviePosition.movieBackDrop;
                 String movieId = moviePosition.movieId;
 
-                Intent detailIntent = new Intent(getActivity(), MovieDetailActivity.class).putExtra(Intent.EXTRA_TEXT, new String[]{title, poster, synopsis, release, rating, backdrop, movieId});
-                startActivity(detailIntent);
+                Log.v(LOG_TAG, "moviePosition items are being called : " + moviePosition.movieTitle + " - " + moviePosition.movieId );
+
+//                MainActivity mainActivity = new MainActivity();
+//
+//                mainActivity.passMovieDetails(moviePosition);
+
+
+//                if (MainActivity.twoPaneView == true){
+
+                moviePassDatas = new String[]{title, poster, synopsis, release, rating, backdrop, movieId};
+
+                    Bundle args = new Bundle();
+//                    args.putParcelable(DetailFragment.DETAIL_DATA, moviePosition);
+                    args.putStringArray(MainActivity.DETAILFRAGMENT_DATA, moviePassDatas);
+
+
+                //If we are in a 2 pane view, replace the current fragment with the updated fragment
+                if (MainActivity.twoPaneView) {
+                    DetailFragment df = new DetailFragment();
+                    df.setArguments(args);
+
+                    FragmentManager fm = getFragmentManager();
+                    fm.beginTransaction().replace(R.id.movie_detail_container, df, DETAILFRAGMENT_TAG).commit();
+                }
+
+                //If we are NOT in 2 pane View, send to DetailActivity to create a new Fragment with the arguments from the intent
+                else if (!MainActivity.twoPaneView) {
+                    Intent detailIntent = new Intent(getActivity(), DetailActivity.class).putExtra(DetailActivity.DETAIL_INTENT_PASS, args);
+                    startActivity(detailIntent);
+                }
             }
         });
 
         return rootView;
-
     }
-
-
-
-
 
     public class FetchMoviesTask extends AsyncTask<String, Void, MovieData[]> {
 
-        public String appendURL;
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
         private MovieData[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
@@ -282,14 +296,6 @@ public class MovieFragment extends Fragment {
         @Override
         protected MovieData[] doInBackground(String... params) {
 
-            //TODO: Dont quite understand why I would need the below code, my params ARE null but that doesnt affect my results
-            //If there arent any params then theres nothing to do so null
-            //if (params.length == 0) {
-            //    Log.v(LOG_TAG, "The Params for our doInBackground method are null, no Params!");
-            //    return null;
-            //}
-
-
             if (popRateOrFavorites == 2) {
                 try {
                     List<Favorite> favorites = Favorite.findWithQuery(Favorite.class, "Select * from Favorite where ID >> ? ", "-2");
@@ -323,30 +329,27 @@ public class MovieFragment extends Fragment {
                     }
                  catch (RuntimeException e) {
                     Log.e("FavoritesFragment", "Error ", e);
-                    // If the code didn't successfully get the weather data, there's no point in attemping
-                    // to parse it.
                     return null;
                 }
             }
             else {
 
-
                 // These two need to be declared outside the try/catch
                 // so that they can be closed in the finally block.
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
-
                 String movieJsonStr = null;
 
 
                 try {
 
                     final String DATABASE_BASE_URL = "http://api.themoviedb.org/3";
+                    final String API_ADDON = "&api_key=";
 
                     //TODO: add API key below to use program properly
-                    final String API_KEY = "YOUR_KEY_HERE";
+                    final String API_KEY = "ENTER API KEY HERE";
 
-                    URL url = new URL(DATABASE_BASE_URL + URLAppend + API_KEY);
+                    URL url = new URL(DATABASE_BASE_URL + URLAppend + API_ADDON + API_KEY);
 
                     Log.v(LOG_TAG, "URL = " + url);
 
@@ -385,7 +388,7 @@ public class MovieFragment extends Fragment {
 
                 } catch (IOException e) {
                     Log.e("PlaceholderFragment", "Error ", e);
-                    // If the code didn't successfully get the weather data, there's no point in attemping
+                    // If the code didn't successfully get the poster data, there's no point in attempting
                     // to parse it.
                     return null;
                 } finally {

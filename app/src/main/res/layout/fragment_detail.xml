@@ -1,0 +1,398 @@
+ <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/detail_background_color"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="0dp"
+        android:background="@color/detail_background_color">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Movie Backdrop above everything -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:id="@+id/movie_backdrop_imageview" />
+
+            <!-- Title of movie with orange background -->
+            <TextView
+                style="@style/DetailText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_title_textview"
+                android:paddingBottom="0dp"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:textColor="@color/detail_title_text"
+                android:background="@color/highlight_background_color"
+                android:gravity="center_vertical|center_horizontal"
+
+                />
+        </LinearLayout>
+
+        <!-- Movie poster, Rating, Release Date, Favorite Button on left of Layout ; Synopsis on Right -->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Movie Poster, Rating, Release, Favorite -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="left"
+                >
+
+                <ImageView
+                    android:id="@+id/movie_poster_imageview"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerInside"
+                    android:adjustViewBounds="true"
+                    />
+
+
+                <RatingBar
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:numStars="5"
+                    android:rating="1"
+                    android:isIndicator="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/movie_ratingbar"
+                    android:layout_alignParentLeft="true"
+                    android:progressTint="@color/highlight_background_color"
+                    android:paddingBottom="0dp"
+                    android:layout_gravity="center"
+
+                    />
+
+                <TextView
+                    style="@style/DetailText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/movie_release_hardcode"
+                    android:paddingBottom="0dp"
+                    android:text="@string/release_date"
+                    android:layout_gravity="center"
+                    />
+
+
+                <TextView
+                    style="@style/DetailText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/movie_release_textview"
+                    android:layout_gravity="center"
+                    android:paddingBottom="8dp"
+                    />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Favorite"
+                    android:id="@+id/action_favorites"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:paddingBottom="0dp"
+                    android:paddingTop="0dp"
+                    />
+            </LinearLayout>
+
+
+            <!-- Synopsis on the right -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    style="@style/DetailText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/movie_synopsis_textview"
+                    android:text="TESTING Drawn from interviews with survivors of Easy Company, as well as their journals and letters, Band of Brothers chronicles the experiences of these men from paratrooper training in Georgia through the end of the war. As an elite rifle company parachuting into Normandy early on D-Day morning, participants in the Battle of the Bulge, and witness to the horrors of war, the men of Easy knew extraordinary bravery and extraordinary fear - and became the stuff of legend. Based on Stephen E. Ambrose's acclaimed book of the same name."
+                    android:paddingBottom="12dp" />
+
+            </LinearLayout>
+
+
+
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/detail_main_text"
+                android:layout_marginBottom="12dp"
+                />
+
+        </LinearLayout>
+
+
+        <View android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/detail_main_text"
+            />
+
+
+        <!-- Trailers Below -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            >
+
+
+            <!-- Trailer 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingBottom="0dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:id="@+id/movie_youtube_play_icon"
+                    android:background="@color/highlight_background_color"
+
+                    />
+                <TextView
+                    style="@style/TrailerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/movie_youtube_textview1"
+                    />
+
+            </LinearLayout>
+
+
+            <!-- Line below Trailer 1 -->
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/trailer1_line"
+                android:background="@color/detail_main_text"
+                android:visibility="gone"
+                />
+
+            <!-- Trailer 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trailer2_linear_layout"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:id="@+id/movie_youtube_play_icon2"
+                    android:background="@color/highlight_background_color"
+                    android:visibility="gone"
+
+                    />
+                <TextView
+                    style="@style/TrailerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/movie_youtube_textview2"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
+
+            <!-- Line below Trailer 2 -->
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/trailer2_line"
+                android:background="@color/detail_main_text"
+                android:visibility="gone"
+                />
+
+            <!-- Trailer 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trailer3_linear_layout"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp"
+                android:visibility="gone"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/movie_youtube_play_icon3"
+                    android:background="@color/highlight_background_color"
+                    android:visibility="gone"
+
+                    />
+                <TextView
+                    style="@style/TrailerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/movie_youtube_textview3"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <View android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/detail_main_text"
+            android:layout_marginBottom="30dp"
+            />
+
+
+        <!-- Reviews Below -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+            <!-- Review 1 -->
+
+            <TextView
+                style="@style/ReviewAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_review_author"
+                android:paddingBottom="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_gravity="left"
+                android:visibility="gone"
+                />
+
+            <TextView
+                style="@style/ReviewText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/movie_review_textview1"
+                android:layout_marginBottom="0dp"
+                />
+
+            <Button
+                style="@style/ReadmoreButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_review_readmore"
+                />
+
+
+            <!-- Line 1 -->
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="25dp"
+                android:id="@+id/review1_line"
+                android:background="@color/detail_main_text"
+                android:visibility="gone"
+
+                />
+
+
+            <!-- Review 2 -->
+            <TextView
+                style="@style/ReviewAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_review_author2"
+                android:paddingBottom="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_gravity="left"
+                android:visibility="gone"
+                />
+
+            <TextView
+                style="@style/ReviewText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/movie_review_textview2"
+                android:visibility="gone"
+                android:layout_marginBottom="0dp"
+                />
+
+            <Button
+                style="@style/ReadmoreButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_review_readmore2"
+                />
+
+
+            <!-- Line 2 -->
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="25dp"
+                android:id="@+id/review2_line"
+                android:background="@color/detail_main_text"
+                android:visibility="gone"
+                />
+
+
+            <!-- Review 3 -->
+            <TextView
+                style="@style/ReviewAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_review_author3"
+                android:paddingBottom="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_gravity="left"
+                android:visibility="gone"
+                />
+
+            <TextView
+                style="@style/ReviewText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/movie_review_textview3"
+                android:layout_marginBottom="0dp"
+                android:visibility="gone"
+                />
+
+            <Button
+                style="@style/ReadmoreButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_review_readmore3"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

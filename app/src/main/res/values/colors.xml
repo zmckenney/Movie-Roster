@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="highlight_background_color">#BF360C</color>
+    <color name="detail_main_text">#BDBDBD</color>
+    <color name="detail_title_text">#FFFFFF</color>
+    <color name="review_background">#616161</color>
+    <color name="detail_background_color">#212121</color>
+    <color name="main_color">#424242</color>
+
+</resources>

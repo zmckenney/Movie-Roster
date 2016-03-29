@@ -19,7 +19,7 @@ public class PosterAdapter extends ArrayAdapter<MovieData> {
 
     private static final String LOG_TAG = PosterAdapter.class.getSimpleName();
 
-    private ArrayList<MovieData> posterData = new ArrayList<MovieData>();
+    //private ArrayList<MovieData> posterData = new ArrayList<MovieData>();
 
 
     //public void addPosterData(String movieDataFromFragment){
@@ -46,7 +46,6 @@ public class PosterAdapter extends ArrayAdapter<MovieData> {
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.list_item_poster);
         Picasso.with(getContext()).load(movieData.moviePosterPath).placeholder(R.drawable.posterplaceholder).error(R.drawable.postererror).fit().into(imageView);
-
         return convertView;
     }
 

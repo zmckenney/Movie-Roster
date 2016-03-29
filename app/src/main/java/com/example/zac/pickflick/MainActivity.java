@@ -4,28 +4,42 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.facebook.stetho.Stetho;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    public static boolean twoPaneView = false;
+    public static final String DETAILFRAGMENT_TAG = "DFTAG";
+    public static final String DETAILFRAGMENT_DATA = "DFDATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Initialize Stetho for Chrome Viewing
-        Stetho.initializeWithDefaults(this);
-
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MovieFragment())
-                    .commit();
+
+        //Is this a 600dp or greater device?
+        if (findViewById(R.id.movie_detail_container) != null) {
+
+            //set as a two pane device
+            twoPaneView = true;
+
+
+            //if there isnt any data yet, create a fragment
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+
+            }
+        else {
+            twoPaneView = false;
         }
+
     }
+
 
 
     @Override
@@ -34,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -55,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void noFavoritesSavedToast(){
-        Toast toast = Toast.makeText(getApplicationContext(), "You have no favorites saved", Toast.LENGTH_SHORT);
-        toast.show();
-    }
+//    public void noFavoritesSavedToast(){
+//        Toast toast = Toast.makeText(getApplicationContext(), "You have no favorites saved", Toast.LENGTH_SHORT);
+//        toast.show();
+//    }
 }

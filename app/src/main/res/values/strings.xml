@@ -5,6 +5,17 @@
     <string name="action_rating">Rating</string>
     <string name="action_popular">Most Popular</string>
     <string name="action_favorites">Favorites</string>
-
     <string name="title_activity_movie_detail">Movie Details</string>
+    <string name="loading_trailers">There are no trailers to display</string>
+    <string name="loading_reviews">There are currently no reviews</string>
+    <string name="release_date">Release Date:</string>
+
+
+    <!-- Buttons -->
+    <string name="button_readmore">Read More</string>
+    <string name="button_favorite">FAVORITE</string>
+    <string name="button_unfavorite">UNFAVORITE</string>
+
+
+
 </resources>

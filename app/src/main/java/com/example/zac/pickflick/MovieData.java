@@ -10,18 +10,18 @@ public class MovieData implements Parcelable {
 
     private static final String LOG_TAG = MovieData.class.getSimpleName();
 
-
     String movieTitle;
     String movieSynopsis;
     String movieReleaseDate;
     String movieUserRating;
-    String posterBaseURL = "http://image.tmdb.org/t/p/w185";
-    String backdropBaseURL = "http://image.tmdb.org/t/p/w600";
     String moviePosterPath;
     String movieBackDrop;
     String movieId;
     String standOrFav;
     int standOrFavInt;
+    final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w185";
+    final String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w600";
+
     //mStandOrFav - Stand = 0, Fav = 1
 
     public MovieData(String mTitle, String mPath, String mSynopsis, String mRelease, String mRating, String mBackDrop, String mId, String mStandOrFav) {
@@ -41,8 +41,8 @@ public class MovieData implements Parcelable {
     private void PosterPaths(){
         standOrFavInt = Integer.parseInt(standOrFav);
         if (standOrFavInt == 0) {
-            this.movieBackDrop = backdropBaseURL + movieBackDrop;
-            this.moviePosterPath = posterBaseURL + moviePosterPath;
+            this.movieBackDrop = BACKDROP_BASE_URL + movieBackDrop;
+            this.moviePosterPath = POSTER_BASE_URL + moviePosterPath;
         }
     }
 
@@ -74,7 +74,6 @@ public class MovieData implements Parcelable {
     }
 
 
-
     public final Parcelable.Creator<MovieData> CREATOR = new Parcelable.Creator<MovieData>() {
 
         @Override
@@ -86,6 +85,9 @@ public class MovieData implements Parcelable {
         public MovieData[] newArray(int i) {
             return new MovieData[i];
         }
+
+
+
     };
 
 

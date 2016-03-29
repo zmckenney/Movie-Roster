@@ -1,9 +1,11 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="0dp"
-    android:layout_margin="0dp"
-    tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame" />
+    android:id="@+id/fragment_posters"
+    android:name="com.example.zac.pickflick.MovieFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    tools:context="com.example.zac.pickflick.MovieFragment"
+    tools:layout="@android:layout/list_content" />
+
