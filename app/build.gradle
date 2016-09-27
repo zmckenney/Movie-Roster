@@ -1,11 +1,26 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+
+
+Properties apiProperties = new Properties()
+File apiKeyFile = file('apikeys.properties')
+
+//see if we have an apikeys.properties file, if yes then pull the keys, if no then throw error
+//This method learned from http://samwolfand.com/blog/2016/5/6/hiding-api-keys-with-gradle
+if (apiKeyFile.exists()){
+    apiProperties.load(apiKeyFile.newDataInputStream())
+} else if (System.env.API_KEY != null){
+    apiProperties.setProperty("tmdbKey", System.env.API_KEY)
+} else {
+    throw new GradleException("Missing an apikeys.properties file, please add this file")
+}
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.0"
 
     defaultConfig {
-        applicationId "com.example.zac.pickflick"
+        applicationId "com.example.zac.moviepicks"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
@@ -16,16 +31,28 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        buildTypes.each {
+            it.buildConfigField 'String', 'API_KEY', apiProperties.getProperty('tmdbKey')
+        }
     }
 }
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.github.satyan:sugar:1.3.1'
+    compile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.uphyca:stetho_realm:0.9.0'
+
+
+//    compile 'com.github.satyan:sugar:1.3.1'
+
 }

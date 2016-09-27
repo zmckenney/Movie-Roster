@@ -1,4 +1,4 @@
-package com.example.zac.pickflick;
+package com.example.zac.moviepicks;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,6 +29,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by Zac on 2/1/16.
@@ -116,11 +119,13 @@ public class DetailFragment extends android.support.v4.app.Fragment {
     String mReviewText2;
     String mReviewText3;
 
+    public Realm myRealm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        myRealm = Realm.getDefaultInstance();
 
             try {
                 Bundle arguments = getArguments();
@@ -489,31 +494,85 @@ public class DetailFragment extends android.support.v4.app.Fragment {
             }
 
 
+            final RealmResults<Favorite> favResults = myRealm.where(Favorite.class).equalTo("title", title).findAll();
+
             //All buttonFavorite items below, if movie isnt favorited button says "favorite" and can add to db, otherwise reverse
             buttonFavorite = (Button) rootView.findViewById(R.id.action_favorites);
-            //if not saved -> make button say "favorite" ; else if already favorited button will say "unfavorite"
-            if (Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
+
+            if (favResults.isEmpty()){
                 buttonFavorite.setText("FAVORITE");
-            } else if (!Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
+            } else if (!favResults.isEmpty()){
                 buttonFavorite.setText("UNFAVORITE");
             }
+
 
             buttonFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.v(LOG_TAG, "Favorite Button pressed on Detail View");
-                    if (Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
-                        Favorite favorite = new Favorite(title, synopsis, release, rating, poster, backdrop, movieId);
-                        favorite.save();
-                        Toast toast = Toast.makeText(getActivity(), "Favorite Saved", Toast.LENGTH_SHORT);
-                        toast.show();
-                        buttonFavorite.setText("UNFAVORITE");
-                    } else if (!Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
-                        Favorite.deleteAll(Favorite.class, "title = ?", title);
-                        Toast toast = Toast.makeText(getActivity(), "Favorite Removed", Toast.LENGTH_SHORT);
-                        toast.show();
+
+//                    myRealm.beginTransaction();
+                    if (favResults.isEmpty()) {
+                        myRealm.executeTransactionAsync(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                Favorite favorite = realm.createObject(Favorite.class);
+                                favorite.setUserRating(rating);
+                                favorite.setSynopsis(synopsis);
+                                favorite.setReleaseDate(release);
+                                favorite.setPosterPath(poster);
+                                favorite.setBackDrop(backdrop);
+                                favorite.setMovieId(movieId);
+                                favorite.setTitle(title);
+                            }
+                        }, new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                Log.v("@@SUCCESS", "ADDED SUCCESSFULLY");
+                                Toast.makeText(getContext(), "ADDED FAVORITE", Toast.LENGTH_SHORT).show();
+                                buttonFavorite.setText("UNFAVORITE");
+                            }
+                        }, new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                Log.v("@@FAIL", "ERROR IN ADDING TO DB");
+                            }
+                        });
+                    } else if(!favResults.isEmpty()){
+                        Toast.makeText(getContext(), "DELETED FAVORITE", Toast.LENGTH_SHORT).show();
                         buttonFavorite.setText("FAVORITE");
+
+                        myRealm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                favResults.deleteAllFromRealm();
+                            }
+                        });
+
                     }
+
+//                    myRealm.commitTransaction();
+
+
+//                    final RealmResults<Favorite> favResults =
+//                            myRealm.where(Favorite.class).findAll();
+
+//                    for(Favorite c:favResults) {
+//                        Log.d("favResults", c.getTitle());
+//                    }
+
+//                    if (Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
+//                        Favorite favorite = new Favorite(title, synopsis, release, rating, poster, backdrop, movieId);
+//                        favorite.save();
+//                        Toast toast = Toast.makeText(getActivity(), "Favorite Saved", Toast.LENGTH_SHORT);
+//                        toast.show();
+//                        buttonFavorite.setText("UNFAVORITE");
+//                    } else if (!Favorite.find(Favorite.class, "title = ?", title).isEmpty()) {
+//                        Favorite.deleteAll(Favorite.class, "title = ?", title);
+//                        Toast toast = Toast.makeText(getActivity(), "Favorite Removed", Toast.LENGTH_SHORT);
+//                        toast.show();
+//                        buttonFavorite.setText("FAVORITE");
+//                    }
                 }
             });
 
@@ -529,6 +588,13 @@ public class DetailFragment extends android.support.v4.app.Fragment {
             return null;
         }
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        myRealm.close();
+        Log.v("@#$@#$", "CLOSED THE DETAILFRAGMENT");
     }
 
 
@@ -622,8 +688,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
                     final String API_ADDON = "&api_key=";
                     final String FINAL_DB_URL;
 
-                    //TODO: add API key below to use program properly
-                    final String API_KEY = "ENTER API KEY HERE";
+                    final String API_KEY = BuildConfig.API_KEY;
 
                     switch (trailerReviewInt) {
                         case 1:

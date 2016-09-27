@@ -1,4 +1,4 @@
-package com.example.zac.pickflick;
+package com.example.zac.moviepicks;
 
 import android.os.Parcel;
 import android.os.Parcelable;

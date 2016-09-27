@@ -1,4 +1,4 @@
-package com.example.zac.pickflick;
+package com.example.zac.moviepicks;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -44,4 +44,9 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        onBackPressed();
+//    }
 }

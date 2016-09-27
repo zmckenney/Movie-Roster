@@ -1,4 +1,4 @@
-package com.example.zac.pickflick;
+package com.example.zac.moviepicks;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

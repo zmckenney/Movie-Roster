@@ -1,4 +1,4 @@
-package com.example.zac.pickflick;
+package com.example.zac.moviepicks;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,8 +26,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -58,6 +60,9 @@ public class MovieFragment extends Fragment {
     int ratingClicked = 0;
     int favoritesClicked = 0;
 
+    public Realm myRealm;
+    private RealmChangeListener realmChangeListener;
+
 
     public MovieFragment() {
     }
@@ -66,6 +71,20 @@ public class MovieFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        myRealm = Realm.getDefaultInstance();
+        realmChangeListener = new RealmChangeListener() {
+            @Override
+            public void onChange(Object element) {
+                if (popRateOrFavorites == 2) {
+                    mPosterAdapter.clear();
+                    searchAndSetFavs(false);
+
+                }
+            }
+        };
+        myRealm.addChangeListener(realmChangeListener);
+
         if(savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
             movieFinalResults = new ArrayList<>(movieDataResults);
 
@@ -81,7 +100,6 @@ public class MovieFragment extends Fragment {
                     URLAppend = "/discover/movie?sort_by=popularity.desc";
                     updateMovies();
                     Log.v(LOG_TAG, "movieFinalResults is 0");
-                    //updateMovies();
                     break;
 
                 case 1:
@@ -91,7 +109,7 @@ public class MovieFragment extends Fragment {
                     break;
 
                 case 2:
-                    updateMovies();
+                    searchAndSetFavs(true);
                     Log.v(LOG_TAG, "movieFinalResults is 0");
                     break;
             }
@@ -153,16 +171,38 @@ public class MovieFragment extends Fragment {
                 if (favoritesClicked == 0){
 
                     favoritesClicked = 1;
+                    Log.v("@#$@#$@#$@#$@#", "FAVORITES CLICKED AND FAVORITESCLICKED = " + favoritesClicked);
                     popularClicked = 0;
                     favoritesClicked = 0;
 
                     popRateOrFavorites = 2;
-                    Log.v(LOG_TAG, "Favorite tapped, use database");
-                    updateMovies();
+
+                    mPosterAdapter.clear();
+                    searchAndSetFavs(false);
+
                 }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void searchAndSetFavs(boolean init) {
+        RealmResults<Favorite> results1 =
+            myRealm.where(Favorite.class).findAll();
+
+        if (init) {
+            Log.v("@#$@#$@#$@#$", "THIS IS THE AMOUNT OF RESULTS WE HAVE " + results1.size());
+            for (Favorite c : results1){
+                movieFinalResults.add(new MovieData(c.getTitle(), c.getPosterPath(), c.getSynopsis(), c.getReleaseDate(), c.getUserRating(), c.getBackDrop(), c.getMovieId(), "1"));
+            }
+
+        } else {
+            Log.v("@#$@#$@#$@#$", "THIS IS THE AMOUNT OF RESULTS WE HAVE " + results1.size());
+            for (Favorite c : results1) {
+                mPosterAdapter.add(new MovieData(c.getTitle(), c.getPosterPath(), c.getSynopsis(), c.getReleaseDate(), c.getUserRating(), c.getBackDrop(), c.getMovieId(), "1"));
+            }
+        }
     }
 
     private void updateMovies() {
@@ -189,6 +229,7 @@ public class MovieFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         GridView gridView = (GridView) rootView.findViewById(R.id.poster_gridview);
+
         gridView.setAdapter(mPosterAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -240,6 +281,7 @@ public class MovieFragment extends Fragment {
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, MovieData[]> {
+
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
@@ -296,43 +338,24 @@ public class MovieFragment extends Fragment {
         @Override
         protected MovieData[] doInBackground(String... params) {
 
-            if (popRateOrFavorites == 2) {
-                try {
-                    List<Favorite> favorites = Favorite.findWithQuery(Favorite.class, "Select * from Favorite where ID >> ? ", "-2");
-                    int count = favorites.size();
-                    MovieData[] resultMovieInfo = new MovieData[count];
-                    Log.v(LOG_TAG, "Total Results = " + count);
-
-
-                    if (count > 0) {
-
-                        for (int i = 0; i <= count - 1; i++) {
-                            String favoritesString = favorites.get(i).toString();
-                            List<String> items = Arrays.asList(favoritesString.split("'\'"));
-
-                            String title = items.get(0);
-                            String posterPath = items.get(1);
-                            String synopsis = items.get(2);
-                            String releaseDate = items.get(3);
-                            String rating = items.get(4);
-                            String backdrop = items.get(5);
-                            String id = items.get(6);
-
-                            resultMovieInfo[i] = new MovieData(title, posterPath, synopsis, releaseDate, rating, backdrop, id, "1");
-
-                            Log.v(LOG_TAG, " " + title + " " + posterPath + " " + synopsis + " " + releaseDate + " " + rating + " " + backdrop + " " + id);
-                        }
-
-                        return resultMovieInfo;
-                    }
-
-                    }
-                 catch (RuntimeException e) {
-                    Log.e("FavoritesFragment", "Error ", e);
-                    return null;
-                }
-            }
-            else {
+//            if (popRateOrFavorites == 2) {
+//
+//                final RealmResults<Favorite> results1 =
+//                        myRealm.where(Favorite.class).findAll();
+//
+//
+//                MovieData[] favMovies = new MovieData[results1.size()];
+//                Log.v("@#$@#$@#$@#$", "THIS IS THE AMOUNT OF RESULTS WE HAVE " + results1.size());
+//
+//                for (int i = 0; i < results1.size(); i++){
+//                    Favorite fav = results1.get(i);
+//                    favMovies[i] = new MovieData(fav.getTitle(),fav.getPosterPath(), fav.getSynopsis(), fav.getReleaseDate(), fav.getUserRating(), fav.getBackDrop(), fav.getMovieId(), "1");
+//                }
+//
+//
+//                return favMovies;
+//            }
+//            else {
 
                 // These two need to be declared outside the try/catch
                 // so that they can be closed in the finally block.
@@ -346,8 +369,7 @@ public class MovieFragment extends Fragment {
                     final String DATABASE_BASE_URL = "http://api.themoviedb.org/3";
                     final String API_ADDON = "&api_key=";
 
-                    //TODO: add API key below to use program properly
-                    final String API_KEY = "ENTER API KEY HERE";
+                    final String API_KEY = BuildConfig.API_KEY;
 
                     URL url = new URL(DATABASE_BASE_URL + URLAppend + API_ADDON + API_KEY);
 
@@ -412,7 +434,7 @@ public class MovieFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-            }
+//            }
                 return null;
             }
 
