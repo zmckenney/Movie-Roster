@@ -1,9 +1,8 @@
-package com.example.zac.moviepicks;
+package com.example.zac.movieroster;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 /**
  * Created by Zac on 2/4/16.
@@ -18,6 +17,12 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setHomeButtonEnabled(false);
+        }
 
         //if we dont have a savedInstanceState then create a new fragment and use the bundled arguments
         if (savedInstanceState == null) {
@@ -34,19 +39,4 @@ public class DetailActivity extends AppCompatActivity {
         }
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-//    @Override
-//    public void onBackPressed() {
-//        onBackPressed();
-//    }
 }

@@ -20,7 +20,7 @@ android {
     buildToolsVersion "23.0.0"
 
     defaultConfig {
-        applicationId "com.example.zac.moviepicks"
+        applicationId "com.example.zac.movieroster"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1

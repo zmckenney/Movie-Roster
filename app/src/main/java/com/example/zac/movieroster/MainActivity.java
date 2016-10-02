@@ -1,4 +1,4 @@
-package com.example.zac.moviepicks;
+package com.example.zac.movieroster;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

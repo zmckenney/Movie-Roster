@@ -1,4 +1,4 @@
-package com.example.zac.moviepicks;
+package com.example.zac.movieroster.data;
 
 import io.realm.RealmObject;
 
@@ -73,23 +73,4 @@ public class Favorite extends RealmObject{
         this.movieId = movieId;
     }
 
-
-    //    public Favorite(){
-//    }
-//
-//    public Favorite(String title, String synopsis, String releaseDate, String userRating, String posterPath, String backDrop, String movId){
-//        this.title = title;
-//        this.synopsis = synopsis;
-//        this.releaseDate = releaseDate;
-//        this.userRating = userRating;
-//        this.posterPath = posterPath;
-//        this.backDrop = backDrop;
-//        this.movieId = movId;
-//    }
-//
-//    @Override
-//    public String toString() {
-//
-//        return title + "'\'" + posterPath + "'\'" + synopsis + "'\'" + releaseDate + "'\'" + userRating + "'\'" + backDrop + "'\'" + movieId;
-//    }
 }

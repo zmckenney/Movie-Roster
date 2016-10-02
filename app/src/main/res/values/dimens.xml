@@ -2,5 +2,22 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">0dp</dimen>
     <dimen name="activity_vertical_margin">0dp</dimen>
+
+    <dimen name="synopsis_vertical_padding">12dp</dimen>
+
+    <dimen name="trailer_padding">3dp</dimen>
+    <dimen name="trailer_margin_horizontal">5dp</dimen>
+    <dimen name="trailer_margin_vertical">3dp</dimen>
+
+    <dimen name="review_margin_horizontal">5dp</dimen>
+    <dimen name="review_margin_vertical">3dp</dimen>
+    <dimen name="author_padding">3dp</dimen>
+
+    <dimen name="attribution_text_padding">8dp</dimen>
+    <dimen name="attribution_text_margin">8dp</dimen>
+    <dimen name="attribution_logo_width">125dp</dimen>
+    <dimen name="attribution_logo_height">49dp</dimen>
+
+
     <dimen name="main_text_size">17sp</dimen>
 </resources>

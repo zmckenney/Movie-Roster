@@ -5,12 +5,12 @@
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    tools:context="com.example.zac.moviepicks.MainActivity">
+    tools:context="com.example.zac.movieroster.MainActivity">
 
 
     <fragment
         android:id="@+id/fragment_posters"
-        android:name="com.example.zac.moviepicks.MovieFragment"
+        android:name="com.example.zac.movieroster.MovieFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"

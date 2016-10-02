@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zac.moviepicks" >
+    package="com.example.zac.movieroster" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -18,7 +18,7 @@
 
 
         <activity
-            android:name="com.example.zac.moviepicks.MainActivity"
+            android:name="com.example.zac.movieroster.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,25 +27,14 @@
             </intent-filter>
         </activity>
 
-        <!--    No Longer needed because a fragment is being used inside the DetailActivity class
         <activity
-            android:name=".MovieDetailActivity"
-            android:label="Movie Detail View"
-            android:parentActivityName=".MainActivity">
+            android:name="com.example.zac.movieroster.DetailActivity"
+            android:label="Movie Detail View">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.zac.pickflick.MainActivity" />
+                android:value="com.example.zac.movieroster.MainActivity" />
         </activity>
-        -->
 
-        <activity
-            android:name="com.example.zac.moviepicks.DetailActivity"
-            android:label="Movie Detail View"
-            android:parentActivityName="com.example.zac.moviepicks.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.zac.moviepicks.MainActivity" />
-        </activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.zac.moviepicks;
+package com.example.zac.movieroster;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

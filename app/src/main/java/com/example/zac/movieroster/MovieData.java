@@ -1,4 +1,4 @@
-package com.example.zac.moviepicks;
+package com.example.zac.movieroster;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -91,5 +91,31 @@ public class MovieData implements Parcelable {
     };
 
 
+    public String getMovieTitle() {
+        return movieTitle;
+    }
 
+    public String getMovieSynopsis() {
+        return movieSynopsis;
+    }
+
+    public String getMovieReleaseDate() {
+        return movieReleaseDate;
+    }
+
+    public String getMovieUserRating() {
+        return movieUserRating;
+    }
+
+    public String getMoviePosterPath() {
+        return moviePosterPath;
+    }
+
+    public String getMovieBackDrop() {
+        return movieBackDrop;
+    }
+
+    public String getMovieId() {
+        return movieId;
+    }
 }
