@@ -1,5 +1,5 @@
 # Movie Roster  
-My first full app I ever built.  The code is terrible and hard to follow but as an exercise in learning what NOT to do I've started overhauling some things and leaving others as-is.  
+My first full app I ever built.  The code is terrible and hard to follow but as an exercise in fixing bad code I decided to start overhauling some things and leaving others as-is.  The front-end looks nice enough but the back-end is only representative of code that I wrote almost a year ago.
 
 # Description  
 An app to find popular and new movies using TheMovieDB.org's API as well as favoriting.  
