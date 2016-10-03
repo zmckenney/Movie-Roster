@@ -1,4 +1,4 @@
-package com.example.zac.movieroster.data;
+package com.zacmckenney.movieroster.data;
 
 import io.realm.RealmObject;
 

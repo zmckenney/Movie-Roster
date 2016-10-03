@@ -1,11 +1,11 @@
-package com.example.zac.movieroster.data;
+package com.zacmckenney.movieroster.data;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.zac.movieroster.BuildConfig;
-import com.example.zac.movieroster.MovieData;
+import com.zacmckenney.movieroster.BuildConfig;
+import com.zacmckenney.movieroster.MovieData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -155,8 +155,6 @@ public class FetchMovies extends AsyncTask<String, Void, MovieData[]> {
     @Override
     protected void onPostExecute(MovieData[] result) {
         if (result != null) {
-
-
             for (final MovieData movieDataInfo : result) {
                 myRealm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -230,7 +228,7 @@ public class FetchMovies extends AsyncTask<String, Void, MovieData[]> {
             }
 
             //Add new MovieData Object into resultMovieInfo list
-            resultMovieInfo[i] = new MovieData(title, poster, synopsis, release, rating, backdrop, id, "0");
+            resultMovieInfo[i] = new MovieData(title, poster, synopsis, release, rating, backdrop, id, "standard");
         }
         return resultMovieInfo;
     }

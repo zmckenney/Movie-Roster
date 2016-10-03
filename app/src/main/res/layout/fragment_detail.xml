@@ -55,8 +55,6 @@
         </LinearLayout>
 
         <!-- Movie poster, Rating, Release Date, Favorite Button on left of Layout ; Synopsis on Right -->
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -82,12 +80,10 @@
                 <RatingBar
                     style="?android:attr/ratingBarStyleSmall"
                     android:numStars="5"
-                    android:rating="1"
-                    android:isIndicator="false"
+                    android:isIndicator="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/movie_ratingbar"
-                    android:layout_alignParentLeft="true"
                     android:progressTint="@color/highlight_background_color"
                     android:paddingBottom="0dp"
                     android:layout_gravity="center"

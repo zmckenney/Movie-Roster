@@ -74,12 +74,10 @@
                 <RatingBar
                     style="?android:attr/ratingBarStyleIndicator"
                     android:numStars="5"
-                    android:rating="1"
-                    android:isIndicator="false"
+                    android:isIndicator="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/movie_ratingbar"
-                    android:layout_alignParentLeft="true"
                     android:progressTint="@color/highlight_background_color"
                     android:paddingBottom="0dp"
                    />

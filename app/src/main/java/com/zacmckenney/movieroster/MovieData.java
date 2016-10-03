@@ -1,4 +1,4 @@
-package com.example.zac.movieroster;
+package com.zacmckenney.movieroster;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,7 +18,6 @@ public class MovieData implements Parcelable {
     String movieBackDrop;
     String movieId;
     String standOrFav;
-    int standOrFavInt;
     final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w185";
     final String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w600";
 
@@ -39,8 +38,7 @@ public class MovieData implements Parcelable {
     }
 
     private void PosterPaths(){
-        standOrFavInt = Integer.parseInt(standOrFav);
-        if (standOrFavInt == 0) {
+        if (standOrFav.equals("standard")) {
             this.movieBackDrop = BACKDROP_BASE_URL + movieBackDrop;
             this.moviePosterPath = POSTER_BASE_URL + moviePosterPath;
         }

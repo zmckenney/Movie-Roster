@@ -1,4 +1,4 @@
-package com.example.zac.movieroster;
+package com.zacmckenney.movieroster;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +13,6 @@ import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     public static boolean twoPaneView = false;
     public static final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -22,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_logo);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
@@ -85,9 +89,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-//    public void noFavoritesSavedToast(){
-//        Toast toast = Toast.makeText(getApplicationContext(), "You have no favorites saved", Toast.LENGTH_SHORT);
-//        toast.show();
-//    }
 }

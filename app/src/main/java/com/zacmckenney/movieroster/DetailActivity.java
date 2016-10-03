@@ -1,4 +1,4 @@
-package com.example.zac.movieroster;
+package com.zacmckenney.movieroster;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -16,6 +16,12 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_logo);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
         setContentView(R.layout.activity_detail);
 
         ActionBar actionBar = getSupportActionBar();
