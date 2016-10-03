@@ -1,4 +1,4 @@
-# MoviePicks  
+# Movie Roster
 An app to find popular and new movies using TheMovieDB.org's API as well as favoriting with data persistence.  
 
 # How to clone and run this app  
